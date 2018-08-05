@@ -1,5 +1,5 @@
 import os
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 
 def clear():
@@ -88,7 +88,7 @@ while True:
             print('Press enter to return to the main menu.')
             input()
 
-    except ValueError:
+    except InvalidOperation:
         print("Please make sure you're entering the correct values.")
         print('Press enter to return to the main menu.')
         input()
