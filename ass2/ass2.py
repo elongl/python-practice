@@ -53,6 +53,7 @@ while True:
             clients_file = open('clients.txt', 'w')
             stringy = map(dict_to_string, clients.values())
             clients_file.writelines(stringy)
+            clients_file.close()
             print(f'Thank you {user["name"]} for using our service. Bye bye.')
             break
 
@@ -64,8 +65,8 @@ while True:
         elif action_index == 2:
             print('How much money would you like to withdraw?')
             amount = abs(float(input()))
-            if user['balance'] - int(float(amount) * 100) >= 0:
-                user['balance'] -= int(float(amount) * 100)
+            if user['balance'] - round(float(amount) * 100) >= 0:
+                user['balance'] -= round(float(amount) * 100)
                 print('You new balance is: %.2f' % (user['balance'] / 100))
             else:
                 print('Insufficient funds. Please try again.')
@@ -75,7 +76,7 @@ while True:
         elif action_index == 3:
             print('How much money would you like to deposit?')
             amount = abs(float(input()))
-            user['balance'] += int(float(amount) * 100)
+            user['balance'] += round(float(amount) * 100)
             print('You new balance is: %.2f' % (user['balance'] / 100))
             print('Press enter to return to the main menu.')
             input()
