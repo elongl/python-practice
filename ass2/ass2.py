@@ -7,7 +7,7 @@ def clear():
 
 def string_to_dict(client_string):
     props = client_string.split('\t')
-    return {'id': props[0], 'name': props[1], 'password': props[2], 'balance': int(float(props[3]) * 100)}
+    return {'id': props[0], 'name': props[1], 'password': props[2], 'balance': round(float(props[3]) * 100)}
 
 
 def dict_to_string(client_dict):
@@ -43,10 +43,9 @@ while True:
 
 user = clients[account_id]
 clear()
-
 while True:
     clear()
-    print('Welcome %s! Please choose your action.' % user['name'])
+    print(f'Welcome {user["name"]}! Please choose your action.')
     print('1. Check Your Balance.\n2. Withdraw Funds.\n3. Deposit Funds.\n4. Change Password.\n-1. Exit')
     try:
         action_index = int(input())
@@ -54,9 +53,7 @@ while True:
             clients_file = open('clients.txt', 'w')
             stringy = map(dict_to_string, clients.values())
             clients_file.writelines(stringy)
-
-            print('Thank you %s for using our service. Bye bye.' %
-                  user['name'])
+            print(f'Thank you {user["name"]} for using our service. Bye bye.')
             break
 
         elif action_index == 1:
@@ -66,7 +63,7 @@ while True:
 
         elif action_index == 2:
             print('How much money would you like to withdraw?')
-            amount = abs(int(input()))
+            amount = abs(float(input()))
             if user['balance'] - int(float(amount) * 100) >= 0:
                 user['balance'] -= int(float(amount) * 100)
                 print('You new balance is: %.2f' % (user['balance'] / 100))
@@ -77,7 +74,7 @@ while True:
 
         elif action_index == 3:
             print('How much money would you like to deposit?')
-            amount = abs(int(input()))
+            amount = abs(float(input()))
             user['balance'] += int(float(amount) * 100)
             print('You new balance is: %.2f' % (user['balance'] / 100))
             print('Press enter to return to the main menu.')
