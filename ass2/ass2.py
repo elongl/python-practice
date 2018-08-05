@@ -1,4 +1,5 @@
 import os
+from decimal import Decimal
 
 
 def clear():
@@ -7,11 +8,11 @@ def clear():
 
 def string_to_dict(client_string):
     props = client_string.split('\t')
-    return {'id': props[0], 'name': props[1], 'password': props[2], 'balance': round(float(props[3]) * 100)}
+    return {'id': props[0], 'name': props[1], 'password': props[2], 'balance': Decimal(props[3])}
 
 
 def dict_to_string(client_dict):
-    return "%s\t%s\t%s\t%.2f\n" % (client_dict['id'], client_dict['name'], client_dict['password'], client_dict['balance'] / 100)
+    return "%s\t%s\t%s\t%.2f\n" % (client_dict['id'], client_dict['name'], client_dict['password'], client_dict['balance'])
 
 
 with open('clients.txt') as clients_file:
@@ -56,16 +57,16 @@ while True:
             break
 
         elif action_index == 1:
-            print('Your balance is: %.2f' % (user['balance'] / 100))
+            print('Your balance is: %.2f' % user['balance'])
             print('Press enter to return to the main menu.')
             input()
 
         elif action_index == 2:
             print('How much money would you like to withdraw?')
-            amount = abs(float(input()))
-            if user['balance'] - round(float(amount) * 100) >= 0:
-                user['balance'] -= round(float(amount) * 100)
-                print('You new balance is: %.2f' % (user['balance'] / 100))
+            amount = Decimal(input())
+            if user['balance'] - amount >= 0:
+                user['balance'] -= amount
+                print('You new balance is: %.2f' % user['balance'])
             else:
                 print('Insufficient funds. Please try again.')
             print('Press enter to return to the main menu.')
@@ -73,9 +74,9 @@ while True:
 
         elif action_index == 3:
             print('How much money would you like to deposit?')
-            amount = abs(float(input()))
-            user['balance'] += round(float(amount) * 100)
-            print('You new balance is: %.2f' % (user['balance'] / 100))
+            amount = Decimal(input())
+            user['balance'] += amount
+            print('You new balance is: %.2f' % user['balance'])
             print('Press enter to return to the main menu.')
             input()
 
