@@ -14,9 +14,8 @@ def dict_to_string(client_dict):
     return "%s\t%s\t%s\t%.2f\n" % (client_dict['id'], client_dict['name'], client_dict['password'], client_dict['balance'] / 100)
 
 
-clients_file = open('clients.txt', 'r')
-clients_lines = clients_file.read().splitlines()
-clients_file.close()
+with open('clients.txt') as clients_file:
+    clients_lines = clients_file.read().splitlines()
 clients = {}
 for client in clients_lines:
     client_dict = string_to_dict(client)
@@ -50,10 +49,9 @@ while True:
     try:
         action_index = int(input())
         if action_index == -1:
-            clients_file = open('clients.txt', 'w')
             stringy = map(dict_to_string, clients.values())
-            clients_file.writelines(stringy)
-            clients_file.close()
+            with open('clients.txt', 'w') as clients_file:
+                clients_file.writelines(stringy)
             print(f'Thank you {user["name"]} for using our service. Bye bye.')
             break
 
