@@ -1,5 +1,4 @@
 import os
-from client import Client
 
 
 def clear():
