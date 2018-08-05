@@ -59,12 +59,12 @@ while True:
                   user['name'])
             break
 
-        if action_index == 1:
+        elif action_index == 1:
             print('Your balance is: %.2f' % (user['balance'] / 100))
             print('Press enter to return to the main menu.')
             input()
 
-        if action_index == 2:
+        elif action_index == 2:
             print('How much money would you like to withdraw?')
             amount = abs(int(input()))
             if user['balance'] - int(float(amount) * 100) >= 0:
@@ -75,7 +75,7 @@ while True:
             print('Press enter to return to the main menu.')
             input()
 
-        if action_index == 3:
+        elif action_index == 3:
             print('How much money would you like to deposit?')
             amount = abs(int(input()))
             user['balance'] += int(float(amount) * 100)
@@ -83,7 +83,7 @@ while True:
             print('Press enter to return to the main menu.')
             input()
 
-        if action_index == 4:
+        elif action_index == 4:
             print('What would you like your new password to be?')
             new_password = input()
             user['password'] = new_password
