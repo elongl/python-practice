@@ -10,13 +10,17 @@ def string_to_dict(client_string):
     return {'id': props[0], 'name': props[1], 'password': props[2], 'balance': int(float(props[3]) * 100)}
 
 
+def dict_to_string(client_dict):
+    return "%s\t%s\t%s\t%.2f\n" % (client_dict['id'], client_dict['name'], client_dict['password'], client_dict['balance'] / 100)
+
+
 clients_file = open('clients.txt', 'r')
 clients_lines = clients_file.read().splitlines()
+clients_file.close()
 clients = {}
 for client in clients_lines:
     client_dict = string_to_dict(client)
     clients[client_dict['id']] = client_dict
-
 
 while True:
     print("Please insert your account's ID.")
@@ -47,13 +51,17 @@ while True:
     try:
         action_index = int(input())
         if action_index == -1:
+            clients_file = open('clients.txt', 'w')
+            stringy = map(dict_to_string, clients.values())
+            clients_file.writelines(stringy)
+
             print('Thank you %s for using our service. Bye bye.' %
                   user['name'])
             break
 
         if action_index == 1:
             print('Your balance is: %.2f' % (user['balance'] / 100))
-            print('Press enter to return to main menu.')
+            print('Press enter to return to the main menu.')
             input()
 
         if action_index == 2:
@@ -64,7 +72,7 @@ while True:
                 print('You new balance is: %.2f' % (user['balance'] / 100))
             else:
                 print('Insufficient funds. Please try again.')
-            print('Press enter to return to main menu.')
+            print('Press enter to return to the main menu.')
             input()
 
         if action_index == 3:
@@ -72,7 +80,7 @@ while True:
             amount = abs(int(input()))
             user['balance'] += int(float(amount) * 100)
             print('You new balance is: %.2f' % (user['balance'] / 100))
-            print('Press enter to return to main menu.')
+            print('Press enter to return to the main menu.')
             input()
 
         if action_index == 4:
@@ -80,11 +88,11 @@ while True:
             new_password = input()
             user['password'] = new_password
             print('You new password has been assigned.')
-            print('Press enter to return to main menu.')
+            print('Press enter to return to the main menu.')
             input()
 
     except ValueError:
         print("Please make sure you're entering the correct values.")
-        print('Press enter to return to main menu.')
+        print('Press enter to return to the main menu.')
         input()
         continue
