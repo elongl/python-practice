@@ -6,27 +6,86 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def string_to_object(client_string):
-    return Client(*client_string.split('\t'))
+def string_to_dict(client_string):
+    props = client_string.split('\t')
+    return {'id': props[0], 'name': props[1], 'password': props[2], 'balance': int(float(props[3]) * 100)}
 
 
 clients_file = open('clients.txt', 'r')
 clients_lines = clients_file.read().splitlines()
 clients = {}
 for client in clients_lines:
-    client_object = string_to_object(client)
-    clients[client_object.id] = client_object
+    client_dict = string_to_dict(client)
+    clients[client_dict['id']] = client_dict
 
 
 while True:
     print("Please insert your account's ID.")
     account_id = input()
     if account_id not in clients:
-        print("Invalid account id.")
-        continue
+        clear()
+        print("Invalid account ID.")
+    else:
+        break
+
+clear()
+while True:
     print("Please insert your account's password.")
     account_password = input()
+    if account_password != clients[account_id]['password']:
+        clear()
+        print("Invalid account password.")
+    else:
+        break
 
-    print('Please choose your action.')
-    print('1. Check Your Balance.\n2. Withdraw Funds.\n3. Deposit Funds.\n4. Change Password.')
-    action_index = input()
+user = clients[account_id]
+clear()
+
+while True:
+    clear()
+    print('Welcome %s! Please choose your action.' % user['name'])
+    print('1. Check Your Balance.\n2. Withdraw Funds.\n3. Deposit Funds.\n4. Change Password.\n-1. Exit')
+    try:
+        action_index = int(input())
+        if action_index == -1:
+            print('Thank you %s for using our service. Bye bye.' %
+                  user['name'])
+            break
+
+        if action_index == 1:
+            print('Your balance is: %.2f' % (user['balance'] / 100))
+            print('Press enter to return to main menu.')
+            input()
+
+        if action_index == 2:
+            print('How much money would you like to withdraw?')
+            amount = abs(int(input()))
+            if user['balance'] - int(float(amount) * 100) >= 0:
+                user['balance'] -= int(float(amount) * 100)
+                print('You new balance is: %.2f' % (user['balance'] / 100))
+            else:
+                print('Insufficient funds. Please try again.')
+            print('Press enter to return to main menu.')
+            input()
+
+        if action_index == 3:
+            print('How much money would you like to deposit?')
+            amount = abs(int(input()))
+            user['balance'] += int(float(amount) * 100)
+            print('You new balance is: %.2f' % (user['balance'] / 100))
+            print('Press enter to return to main menu.')
+            input()
+
+        if action_index == 4:
+            print('What would you like your new password to be?')
+            new_password = input()
+            user['password'] = new_password
+            print('You new password has been assigned.')
+            print('Press enter to return to main menu.')
+            input()
+
+    except ValueError:
+        print("Please make sure you're entering the correct values.")
+        print('Press enter to return to main menu.')
+        input()
+        continue
