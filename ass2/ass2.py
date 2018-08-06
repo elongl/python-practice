@@ -19,11 +19,7 @@ def client_to_line(client_dict):
 
 with open('clients') as clients_file:
     clients_lines = clients_file.read().splitlines()
-clients = {}
-for client_line in clients_lines:
-    client_id = client_line[:client_line.find('\t')]
-    client = line_to_client(client_line)
-    clients[client_id] = client
+clients = {cl[:cl.find('\t')]: line_to_client(cl) for cl in clients_lines}
 
 
 while True:
@@ -57,7 +53,7 @@ while True:
             clients_lines = map(client_to_line, clients.items())
             with open('clients', 'w') as clients_file:
                 clients_file.writelines(clients_lines)
-            print(f'Thank you {user["name"]} for using our service. Bye bye.')
+            print(f'Thank you {user["name"]} for using our service. Bye bye!')
             break
 
         elif action_index == 1:
