@@ -18,8 +18,8 @@ def dict_to_string(client_dict):
 with open('clients.txt') as clients_file:
     clients_lines = clients_file.read().splitlines()
 clients = {}
-for client in clients_lines:
-    client_dict = string_to_dict(client)
+for client_line in clients_lines:
+    client_dict = string_to_dict(client_line)
     clients[client_dict['id']] = client_dict
 
 while True:
@@ -50,9 +50,9 @@ while True:
     try:
         action_index = int(input())
         if action_index == -1:
-            stringy = map(dict_to_string, clients.values())
+            clients_lines = map(dict_to_string, clients.values())
             with open('clients.txt', 'w') as clients_file:
-                clients_file.writelines(stringy)
+                clients_file.writelines(clients_lines)
             print(f'Thank you {user["name"]} for using our service. Bye bye.')
             break
 
@@ -88,7 +88,7 @@ while True:
             print('Press enter to return to the main menu.')
             input()
 
-    except InvalidOperation:
+    except (InvalidOperation, ValueError):
         print("Please make sure you're entering the correct values.")
         print('Press enter to return to the main menu.')
         input()
