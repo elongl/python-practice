@@ -6,26 +6,30 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def string_to_dict(client_string):
-    props = client_string.split('\t')
-    return {'id': props[0], 'name': props[1], 'password': props[2], 'balance': Decimal(props[3])}
+def line_to_client(client_line):
+    client = client_line.split('\t')
+    return {'name': client[1], 'password': client[2], 'balance': Decimal(client[3])}
 
 
-def dict_to_string(client_dict):
-    return "%s\t%s\t%s\t%.2f\n" % (client_dict['id'], client_dict['name'], client_dict['password'], client_dict['balance'])
+def client_to_line(client_dict):
+    id = client_dict[0]
+    client = client_dict[1]
+    return "%s\t%s\t%s\t%.2f\n" % (id, client['name'], client['password'], client['balance'])
 
 
 with open('clients') as clients_file:
     clients_lines = clients_file.read().splitlines()
 clients = {}
 for client_line in clients_lines:
-    client_dict = string_to_dict(client_line)
-    clients[client_dict['id']] = client_dict
+    client_id = client_line[:client_line.find('\t')]
+    client = line_to_client(client_line)
+    clients[client_id] = client
+
 
 while True:
     print("Please insert your account's ID.")
-    account_id = input()
-    if account_id not in clients:
+    user_id = input()
+    if user_id not in clients:
         clear()
         print("Invalid account ID.")
     else:
@@ -34,14 +38,14 @@ while True:
 clear()
 while True:
     print("Please insert your account's password.")
-    account_password = input()
-    if account_password != clients[account_id]['password']:
+    user_password = input()
+    if user_password != clients[user_id]['password']:
         clear()
         print("Invalid account password.")
     else:
         break
 
-user = clients[account_id]
+user = clients[user_id]
 clear()
 while True:
     clear()
@@ -50,7 +54,7 @@ while True:
     try:
         action_index = int(input())
         if action_index == -1:
-            clients_lines = map(dict_to_string, clients.values())
+            clients_lines = map(client_to_line, clients.items())
             with open('clients', 'w') as clients_file:
                 clients_file.writelines(clients_lines)
             print(f'Thank you {user["name"]} for using our service. Bye bye.')
