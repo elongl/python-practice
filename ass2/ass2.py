@@ -63,7 +63,7 @@ while True:
 
         elif action_index == 2:
             print('How much money would you like to withdraw?')
-            amount = Decimal(input())
+            amount = abs(Decimal(input()))
             if user['balance'] - amount >= 0:
                 user['balance'] -= amount
                 print('You new balance is: %.2f' % user['balance'])
@@ -74,7 +74,7 @@ while True:
 
         elif action_index == 3:
             print('How much money would you like to deposit?')
-            amount = Decimal(input())
+            amount = abs(Decimal(input()))
             user['balance'] += amount
             print('You new balance is: %.2f' % user['balance'])
             print('Press enter to return to the main menu.')
