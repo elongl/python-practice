@@ -17,7 +17,7 @@ def client_to_line(client_dict):
     return "%s\t%s\t%s\t%.2f\n" % (id, client['name'], client['password'], client['balance'])
 
 
-with open('clients') as clients_file:
+with open('clients', 'r') as clients_file:
     clients_lines = clients_file.read().splitlines()
 clients = {cl[:cl.find('\t')]: line_to_client(cl) for cl in clients_lines}
 
