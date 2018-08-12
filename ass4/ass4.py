@@ -1,5 +1,4 @@
 """
-Add decimal numbers support.
 Add parentheses support.
 """
 import re
