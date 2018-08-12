@@ -4,19 +4,22 @@ Add parentheses support.
 """
 import re
 import math
+import ast
 
 
 def input_validation(exp):
-    if re.search(r'[a-zA-Z=#<>`;\?\\]', exp) != None:
-        raise ValueError
+    if re.search(r'[a-zA-Z=#<>`;\?\\]', exp):
+        raise ValueError("Unexpected characters in expression.")
 
 
-def integerize(exp_list):
-    return [int(operand) if operand.isdigit() else operand for operand in exp_list]
+def evaluate_literal_types(exp_list):
+    operations = ['+', '-', '*', '/', '^', '!', '%', '&', '$', '@']
+    return [ast.literal_eval(operand) if operand not in operations else operand for operand in exp_list]
 
 
 def exp_to_list(exp):
-    exp_list = re.findall(r'[@&!*/^%$+-]|~?\d+', exp.replace(' ', ''))
+    exp_list = re.findall(
+        r'[@&!*/^%$+-]|~?\d+(?:\.\d*)?|~?\.\d+', exp.replace(' ', ''))
     return [e.replace('~', '-') for e in exp_list]
 
 
@@ -69,7 +72,7 @@ def main():
         try:
             input_validation(expression)
             expression_list = exp_to_list(expression)
-            expression_list = integerize(expression_list)
+            expression_list = evaluate_literal_types(expression_list)
             evaluate_list(expression_list)
             print(*expression_list)
         except (TypeError, ValueError):
