@@ -1,0 +1,80 @@
+"""
+Add decimal numbers support.
+Add parentheses support.
+"""
+import re
+import math
+
+
+def input_validation(exp):
+    if re.search(r'[a-zA-Z=#<>`;\?\\]', exp) != None:
+        raise ValueError
+
+
+def integerize(exp_list):
+    return [int(operand) if operand.isdigit() else operand for operand in exp_list]
+
+
+def exp_to_list(exp):
+    exp_list = re.findall(r'[@&!*/^%$+-]|~?\d+', exp.replace(' ', ''))
+    return [e.replace('~', '-') for e in exp_list]
+
+
+def closest_operation(exp_list, operation_group):
+    return min(exp_list.index(op) if op in exp_list else math.inf for op in operation_group)
+
+
+def evaluate_operation(exp_list, op_pos):
+    operation = exp_list[op_pos]
+    left_op = exp_list[op_pos - 1]
+    right_op = exp_list[op_pos + 1] if len(exp_list) > op_pos + 1 else None
+    if operation == '!':
+        exp_list[op_pos] = math.factorial(left_op)
+        del exp_list[op_pos-1]
+        return
+    elif operation == '&':
+        exp_list[op_pos] = min(left_op, right_op)
+    elif operation == '$':
+        exp_list[op_pos] = max(left_op, right_op)
+    elif operation == '@':
+        exp_list[op_pos] = (left_op + right_op) / 2
+    elif operation == '%':
+        exp_list[op_pos] = left_op % right_op
+    elif operation == '^':
+        exp_list[op_pos] = math.pow(left_op, right_op)
+    elif operation == '/':
+        exp_list[op_pos] = left_op / right_op
+    elif operation == '*':
+        exp_list[op_pos] = left_op * right_op
+    elif operation == '+':
+        exp_list[op_pos] = left_op + right_op
+    elif operation == '-':
+        exp_list[op_pos] = left_op - right_op
+    del exp_list[op_pos-1], exp_list[op_pos]
+
+
+def evaluate_list(exp_list):
+    precedence = [('+', '-'), ('*', '/'), ('^'), ('!', '%'), ('&', '$', '@')]
+    for operation_group in reversed(precedence):
+        while closest_operation(exp_list, operation_group) != math.inf:
+            operation = closest_operation(exp_list, operation_group)
+            evaluate_operation(exp_list, operation)
+    return exp_list
+
+
+def main():
+    print('Please enter your algebraic expression.')
+    while True:
+        expression = input('>>> ')
+        try:
+            input_validation(expression)
+            expression_list = exp_to_list(expression)
+            expression_list = integerize(expression_list)
+            evaluate_list(expression_list)
+            print(*expression_list)
+        except (TypeError, ValueError):
+            print("Please make sure you're entering a valid expression.")
+
+
+if __name__ == '__main__':
+    main()
