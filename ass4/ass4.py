@@ -80,11 +80,14 @@ def main():
     print('Please enter your arithmetic expression.')
     while True:
         expression = input('>>> ')
-        input_validation(expression)
-        expression_list = exp_to_list(expression)
-        expression_list = evaluate_literal_types(expression_list)
-        evaluate_list(expression_list)
-        print(*expression_list)
+        try:
+            input_validation(expression)
+            expression_list = exp_to_list(expression)
+            expression_list = evaluate_literal_types(expression_list)
+            evaluate_list(expression_list)
+            print(*expression_list)
+        except (TypeError, ValueError):
+            print("Please make sure you're entering a valid expression.")
 
 
 if __name__ == '__main__':
